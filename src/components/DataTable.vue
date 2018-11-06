@@ -15,7 +15,6 @@
           colHeaders: true,
           rowHeaders: true,
           height: 600,
-          colWidths: 130,
           rowHeights: 23,
           colHeaders: [],
           manualColumnResize: true,
