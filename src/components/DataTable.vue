@@ -21,7 +21,11 @@
           manualColumnResize: true,
           manualRowResize: true,
           contextMenu: true,
-          viewportColumnRenderingOffset: 10
+          viewportColumnRenderingOffset: 10,
+          copyPaste: {
+            columnsLimit: 1000,
+            rowsLimit: 1000000
+          }
         }
       }
       return data;
