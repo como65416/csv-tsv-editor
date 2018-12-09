@@ -21,8 +21,8 @@
   export default {
     data() {
       let data = [];
-      for (let i = 0; i < 5; i++) {
-        data.push(Array(5).join(".").split("."));
+      for (let i = 0; i < 100; i++) {
+        data.push(Array(15).join(".").split("."));
       }
       return {
         'data': data
