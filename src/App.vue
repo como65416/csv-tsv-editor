@@ -5,16 +5,30 @@
     <button class="small ui violet basic button" @click="exportFile('csv')">Export As CSV</button>
     <button class="small ui violet basic button" @click="exportFile('tsv')">Export As TSV</button>
     <button class="small ui violet basic button" @click="exportFile('xlsx')">Export As XLSX</button>
+    <button class="small ui violet basic button" @click="exportAsMarkdown()">Export As Markdown</button>
+    <button class="small ui violet basic button" @click="exportAsTexttable()">Export As TextTable</button>
     <br /><br />
-    <data-table :data.sync="data">
-    </data-table>
+    <data-table :data.sync="data"></data-table>
+    <text-dialog @close="dialogClosed()" v-show="showDialog">
+      <textarea>{{ dialogContent }}</textarea>
+    </text-dialog>
   </div>
 </template>
 
+<style scoped>
+textarea {
+  width: 100%;
+  height: 300px;
+}
+</style>
+
 <script>
   import DataTable from './components/DataTable.vue';
+  import TextDialog from './components/TextDialog.vue';
   import FileUtil from '../libs/file-util.js';
   import XlsxUtil from '../libs/xlsx-util.js';
+  import markdownTable from 'markdown-table';
+  import {table as textTable} from 'table';
   import 'semantic-ui-button/button.css';
   import * as Papa from 'papaparse';
 
@@ -25,7 +39,9 @@
         data.push(Array(15).join(".").split("."));
       }
       return {
-        'data': data
+        data: data,
+        showDialog: false,
+        dialogContent: '',
       };
     },
     methods : {
@@ -63,10 +79,54 @@
             FileUtil.saveFile(blob, 'output.xlsx');
             break;
         }
+      },
+      exportAsMarkdown: function () {
+        this.dialogContent = markdownTable(this.getMinifyTableDatas(this.data));
+        this.showDialog = true;
+      },
+      exportAsTexttable: function () {
+        let tableDatas = this.getMinifyTableDatas(this.data);
+        if (tableDatas.length > 0) {
+          // workaround: change empty string to ' '
+          for (let i in tableDatas) {
+            for (let j in tableDatas[i]) {
+              if (tableDatas[i][j] == '') {
+                tableDatas[i][j] = ' ';
+              }
+            }
+          }
+          this.dialogContent = textTable(tableDatas);
+          this.showDialog = true;
+        }
+      },
+      getMinifyTableDatas: function () {
+        let maxColumnIndex = -1;
+        let maxRowIndex = -1;
+        for (let colIndex in this.data) {
+          let col = this.data[colIndex].map(d => ((d != null) ? d.trim() : ''));
+          if (col.join('') != '') {
+            maxColumnIndex = colIndex;
+          }
+          for (let i = maxRowIndex; i < col.length; i++) {
+            if (col[i] != null && col[i].trim() != '') {
+              maxRowIndex = i;
+            }
+          }
+        }
+
+        let minifyData = [];
+        for (let i = 0; i <= maxColumnIndex; i++) {
+          minifyData.push(this.data[i].slice(0, maxRowIndex + 1));
+        }
+        return minifyData;
+      },
+      dialogClosed: function () {
+        this.showDialog = false;
       }
     },
     components: {
-      'data-table': DataTable
+      'data-table': DataTable,
+      'text-dialog': TextDialog,
     }
   };
 </script>
