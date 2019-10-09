@@ -1,12 +1,15 @@
 <template>
   <div>
     <h2>TSV/CSV Editor</h2>
+    Import From:
     <button class="small ui violet basic button" @click="loadFile()">Load CSV/TSV</button>
-    <button class="small ui violet basic button" @click="exportFile('csv')">Export As CSV</button>
-    <button class="small ui violet basic button" @click="exportFile('tsv')">Export As TSV</button>
-    <button class="small ui violet basic button" @click="exportFile('xlsx')">Export As XLSX</button>
-    <button class="small ui violet basic button" @click="exportAsMarkdown()">Export As Markdown</button>
-    <button class="small ui violet basic button" @click="exportAsTexttable()">Export As TextTable</button>
+    <br />
+    Export As:
+    <button class="small ui violet basic button" @click="exportFile('csv')">CSV</button>
+    <button class="small ui violet basic button" @click="exportFile('tsv')">TSV</button>
+    <button class="small ui violet basic button" @click="exportFile('xlsx')">XLSX</button>
+    <button class="small ui violet basic button" @click="exportAsMarkdown()">Markdown</button>
+    <button class="small ui violet basic button" @click="exportAsTexttable()">Text Table</button>
     <br /><br />
     <data-table :data.sync="data"></data-table>
     <text-dialog @close="dialogClosed()" v-show="showDialog">
