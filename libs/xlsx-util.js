@@ -35,6 +35,6 @@ function convertToExcelBlob(excel_datas) {
     return blob;
 }
 
-module.exports = {
+export default {
   convertToExcelBlob
 };

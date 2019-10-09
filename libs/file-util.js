@@ -25,7 +25,7 @@ function loadFile() {
   });
 }
 
-module.exports = {
+export default {
   saveFile,
   loadFile
 };
